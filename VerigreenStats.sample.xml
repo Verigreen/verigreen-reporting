@@ -11,11 +11,12 @@ You may obtain a copy of the License at
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 -->
+<!-- Don't forget to rename the file to VerigreenStats.xml and add to .gitignore -->
 <Stats>
   <SMTP>smtp.akamai</SMTP> <!-- Address of the SMTP server you wish to configure to send emails-->
   <Domain>acme.com</Domain> <!-- Domain that will be used to append to the SMTP and the stakeholders-->
   <Stakeholders>my_devops_team; another_pdl@acme.com</Stakeholders> <!-- Stakeholders that will get all notifications. Usually, managers and/or your own team. If the domain is ommited (no @...) the above domain would be appended -->
-  <InputFolder>/products/EE/DevOps/JohnnyBravoData</InputFolder> <!-- Where to take the JSON files from. Should correlate with the OutputRoot of the FetchWebUIData.xml file-->
+  <InputFolder>/path/to/retrieving/JSON files</InputFolder> <!-- Where to take the JSON files from. Should correlate with the OutputRoot of the FetchWebUIData.xml file-->
   <SummaryDisplay>
     <ShowSummary>1</ShowSummary> <!-- If set to 0 will not show the summary data gathered -->
     <ShowDetailedData>1</ShowDetailedData> <!-- if set to 0, will not show the detailed data gathered -->
