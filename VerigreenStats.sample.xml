@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2015 Hewlett-Packard Development Company, L.P.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and limitations under the License.
+-->
+<Stats>
+  <SMTP>smtp.akamai</SMTP> <!-- Address of the SMTP server you wish to configure to send emails-->
+  <Domain>acme.com</Domain> <!-- Domain that will be used to append to the SMTP and the stakeholders-->
+  <Stakeholders>my_devops_team; another_pdl@acme.com</Stakeholders> <!-- Stakeholders that will get all notifications. Usually, managers and/or your own team. If the domain is ommited (no @...) the above domain would be appended -->
+  <InputFolder>/products/EE/DevOps/JohnnyBravoData</InputFolder> <!-- Where to take the JSON files from. Should correlate with the OutputRoot of the FetchWebUIData.xml file-->
+  <SummaryDisplay>
+    <ShowSummary>1</ShowSummary> <!-- If set to 0 will not show the summary data gathered -->
+    <ShowDetailedData>1</ShowDetailedData> <!-- if set to 0, will not show the detailed data gathered -->
+    <ShowCommitHours>1</ShowCommitHours> <!-- if set to 0, will not show the commit hours data-->
+    <ShowCommitersData>1</ShowCommitersData> <!-- if set to 0, will not show details on committers -->
+    <ShowBuildTimes>1</ShowBuildTimes> <!-- if set to 0, will not show build times data -->
+  </SummaryDisplay>
+  <ServerData>
+    <Server> <!-- A list of one or more servers to query-->
+      <Display>Verigreen_Project</Display> <!-- The name of the project/repository/file to use. The file will be <Display>.json. Should correlate to what you put in FetchWebUIData.xml file. You can use https://github.com/Verigreen/verigreen/verigreen-collector-webapp/resources/config.properties, collectors= if you wish-->
+      <username>vg_build</username> <!-- A user with access to Jenkins to query information per-build. See https://github.com/Verigreen/verigreen/verigreen-collector-webapp/resources/config.properties, jenkins.user= for more information-->
+      <token>jenkins_generated_token</token> <!-- The user token to be used. See https://github.com/Verigreen/verigreen/verigreen-collector-webapp/resources/config.properties, jenkins.password= for more information-->
+      <auth>yes</auth> <!-- If Jenkins is set to no authentication, set this to "no". This is BAD PRACTICE but we enabled it when we saw some unsecure Jenkins installations -->
+      <Stakeholders>my_devops_team; acme_pm@acme.com</Stakeholders> <!-- Project stakeholders that will get notifications. Usually, project managers and/or your own team. If the domain is ommited (no @...) the above domain would be appended -->
+    </Server>
+  </ServerData>
+</Stats>
