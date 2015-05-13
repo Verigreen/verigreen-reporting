@@ -46,3 +46,7 @@ VerigreenStats.pl can generate a report on all instances defined in the .xml fil
 
     VerigreenStats.pl -c [Display]
 Where [Display] is the one appearing in the VerigreenStats.xml file corresponding to the specific instance you wish to generate a report for.
+
+## License
+This project is released under Apache v2.0 license
+http://www.apache.org/licenses/LICENSE-2.0.html
