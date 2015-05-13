@@ -1,19 +1,22 @@
 # verigreen-reporting
-Reporting facilities to Verigreen. Allows data mining on a running instance and later show statistics based on it.
+Reporting facilities for Verigreen. Allows data mining on running instance(s) and later show statistics based on it.
 
 This is a set of Perl scripts written to mine data from running VG instances, gather statistics (in JSON format) and create comprehenisve reports to show:
+- Total number of committers
 - Total number of commits
-- Success Rate
-- Interception Rate
-  - Errors
+- Last commit timestamp (show activity)
+- Overall intercpetion rate
+  - Detailed date on different statuses
 - Peak hours
+- Average rate of commits per hour
 - Committers data:
   - Per-Committer total number of commits, success, interception rate
   - Average build time and success build time
   
 ## Prerequisites
 Perl (>5.10 is recommended and was tested on)
-### Packages (will try to install missing ones, but requires permissions for it)
+### Packages
+The script will try to install missing ones, but requires cpan installation permissions for it
 - Getopt::Long (parse command line parameters)
 - XML::Simple (parse configuration files)
 - File::Basename (filename manipulation)
@@ -37,9 +40,9 @@ Perl (>5.10 is recommended and was tested on)
 
 ## Usage
 Rename FetchWebUiData.sample.xml and  VerigreenStats.sample.xml to FetchWebUiData.xml and VerigreenStats.xml (respectively).
-Define a VG instance you wish to get data from in the FetchWebUiData.xml file, run the FetchWebUiData.pl file and the data will be stored (and added every run) to the JSON file.
+Define a VG instance you wish to get data from in the FetchWebUiData.xml file, run the FetchWebUiData.pl file and the data will be stored (and aggregated every run) to the JSON file.
 Define the stakeholders you wish to send the report to in VerigreenStats.xml, and run VerigreenStats.pl file to generate a report.
 VerigreenStats.pl can generate a report on all instances defined in the .xml file. If you wish to genereate a specific report, you can run it as:
 
     VerigreenStats.pl -c [Display]
-Where [Display] is the one appearing in the VerigreenStats.xml file
+Where [Display] is the one appearing in the VerigreenStats.xml file corresponding to the specific instance you wish to generate a report for.
