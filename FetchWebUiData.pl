@@ -56,7 +56,7 @@ $log->info("$0 v$Version Starting...");
 $log->info('Done');
 
 #*****************************************************************************#
-# Subs                                                                        #
+# Subroutines                                                                 #
 #*****************************************************************************#
 sub getConfig {
   my $xml  = XML::Simple->new();
@@ -72,10 +72,7 @@ sub processServers {
   foreach my $server (@{$configData->{ServerList}->{Server}}) {
     my $display = $outputDir . '/' . $server->{Display} . '.json';
     my $d       = undef;
-    if ($^O =~ 'MSW') { # mostly for debugging on Windows...
-      $display =~ s/\//\\/g;
-      $display =~ s/\\products/P\:/;
-    }
+    $display =~ s/\//\\/g if ($^O =~ 'MSW'); # mostly for debugging on Windows...
     
     $log->info("Accessing $display...");
     &GetFile($log, $display, \$d) if -e $display;
@@ -90,7 +87,7 @@ sub processServers {
       $changed = 1;
     }
 
-    # This is a commented-out section to remove any empty hash references - this needs to be investigated as a potential bug in the JB system.
+    # This is a commented-out section to remove any empty hash references - this needs to be investigated as a potential bug in the UI system.
     #my @del_indexes = reverse(grep { !defined $d->[$_] } 0..$#$d);
     #foreach my $item (@del_indexes) {splice (@$d, $item, 1);}
 

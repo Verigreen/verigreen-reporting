@@ -78,12 +78,13 @@ my $lastCommit         = 0;
 my $htmlData           = "";
 my $htmlBrief          = "";
 my $htmlCustomerHeader = "";
+my $appName            = 'Verigreen';
 &setHtmlHeader();
 &showStats();
 &sendEmail() unless defined $customer;
 
 #*****************************************************************************#
-# Subs                                                                        #
+# Subroutines                                                                 #
 #*****************************************************************************#
 sub getConfig {
   my $xml  = XML::Simple->new();
@@ -95,17 +96,12 @@ sub getConfig {
 sub showStats {
   my $location = $configData->{InputFolder};
 
-  if ($^O =~ 'MSW') { # mostly for debugging on Windows...
-  $location =~ s/\//\\/g;
-  $location =~ s/\\products/P\:/;
-  }
-
+  $location =~ s/\//\\/g if ($^O =~ 'MSW'); # mostly for debugging on Windows...
   opendir D, $location;
   my $tickCnt = 1;
   foreach (readdir D) {
     next if /^..?$/; # ignore . and ..
     next if $_ !~ /\.json/i; # read ONLY json files
-    #next if /\.json$/; # ignore the json files - we'll read the perl ones directly
     next if -d "$location/$_"; # ignore sub directories
     my $displayName = basename($_, '.json');
     next if defined $customer && $displayName ne $customer; # run the report only for the specified customer if defined
@@ -127,8 +123,8 @@ sub showStats {
     my $toDisplay        = $collectorVersion ? "Processing $displayName, version $collectorVersion:" : "Processing $displayName:";
     $log->info($toDisplay);
     my $customerData  = &getCustomerData($displayName);
-    my $ui            = defined $customerData->{Address} ? "<a href=\"$customerData->{Address}\">Verigreen UI</a>" : '';
-    $collectorVersion = 'Verigreen Version ' . $collectorVersion;
+    my $ui            = defined $customerData->{Address} ? "<a href=\"$customerData->{Address}\">$appName UI</a>" : '';
+    $collectorVersion = "$appName Version " . $collectorVersion;
     my $str           = "<div onClick=\"openClose('$displayName')\" style=\"cursor:hand; cursor:pointer\"><font color=green><b>$displayName $collectorVersion</b></font><b><font color=purple><u>[click to expand]</u></font></b><br></div>\n";    
     $htmlData        .= $str;
     $str              = "<div><font color=green><b>$displayName $collectorVersion</b></font><br></div>\n";
@@ -211,8 +207,8 @@ sub setHtmlHeader
 <body>
 HTML
 my $now              = localtime time;
-my $egs_Version      = "<h1>Verigreen Statistics v$Version Results [$now]:</h1>\n";
-my $customerVersion  = "<h1>Verigreen Statistics [$now]:</h1>\n";
+my $egs_Version      = "<h1>$appName Statistics v$Version Results [$now]:</h1>\n";
+my $customerVersion  = "<h1>$appName Statistics [$now]:</h1>\n";
 $htmlCustomerHeader  = $htmlData; # set the header for the customer report
 $htmlCustomerHeader .= $customerVersion;
 
@@ -244,13 +240,13 @@ sub sendEmail
   my $output     = 'VerigreenStats.html';
   my $outputData = $htmlData;
   my $msg        = $htmlBrief;
-  my $subject    = 'Verigreen Statistics';
+  my $subject    = "$appName Statistics";
   if (defined $customerData) {
     $output     = "$customer.html";
     $outputData = $report;
-    $msg        = "Hello,<br>Please see the attached report for more details<br>Have an <font color=green><b>Verigreen</b></font> Day!<br><br>BR,<br>The Verigreen Reporter\n";
-    $msg       .= "<br>(You can see the status of your Verigreen <a href=\"$customerData->{Address}\">here</a>)" if defined $customerData->{Address};
-    $subject    = "Verigreen Statistics for $customer";
+    $msg        = "Hello,<br>Please see the attached report for more details<br>Have an <font color=green><b>$appName</b></font> Day!<br><br>BR,<br>The $appName Reporter\n";
+    $msg       .= "<br>(You can see the status of your $appName <a href=\"$customerData->{Address}\">here</a>)" if defined $customerData->{Address};
+    $subject    = "$appName Statistics for $customer";
   }
   
   open(H, ">", $output);
