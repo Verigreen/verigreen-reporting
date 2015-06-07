@@ -16,7 +16,10 @@ BEGIN {
   foreach (@packages){
     unless (eval "use $_; 1") {
       print "$_ not installed... Installing: $_";
-      my $ret = `cpan install $_`;
+      # CPAN needs to be configured to accept silent installation options.
+      # More info here: http://stackoverflow.com/questions/1039107/how-can-i-check-if-a-perl-module-is-installed-on-my-system-from-the-command-line      
+      # You need to give sudo permissions to run cpan to the user running this script.
+      my $ret = `sudo cpan $_`; 
       if ($?) {
         print "Error installing $_: $!\n";
         exit 7;
@@ -56,9 +59,10 @@ use warnings;
 # ES                  | 1.3.5 | 01/01/2015 | Adding individual customer reports #
 # ES                  | 1.4.0 | 16/04/2015 | Rebranding to Verigreen            #
 # ES                  | 2.0.0 | 10/05/2015 | Releasing to Open-Source           #
+# ES                  | 2.0.1 | 21/05/2015 | Fixing bug with over-peak hours    #
 # This module requires cURL installed and on path to work correctly             #
 #*******************************************************************************#
-my $Version      = '2.0.0';
+my $Version      = '2.0.1';
 
 require Exporter;
 our @ISA    = qw(Exporter);
@@ -114,8 +118,9 @@ sub gatherData {
       my ($ss, $mm, $hh, $day, $month, $year, $zone) = localtime $creationTime;
       $year  += 1900;
       $month += 1;
-      $day   = '0' . $day if $day < 10;
-      $month = '0' . $month if $month < 10;
+      $month = '0'. $month if 10 > $month;
+      $day   = '0'. $day if 10 > $day;
+      $hh    = '0' . $hh if 0 < $hh && 10 > $hh;
       my $identifier = $year . $month . $day . '@' . $hh . '00';
       $params->{commitHours}->{$identifier}++;
     }  
@@ -329,14 +334,17 @@ sub ShowCommitHours {
   foreach (keys %{$params->{commitHours}}) {
     $all        += $params->{commitHours}->{$_};
     $biggestId   = $_ if $params->{commitHours}->{$_} > $biggestEver;
-    $biggestEver = $params->{commitHours}->{$_} if $params->{commitHours}->{$_} > $biggestEver;
+    if ($params->{commitHours}->{$_} > $biggestEver) {
+      $biggestEver = $params->{commitHours}->{$_};
+      $overPeak++;
+    }
     #print "Over $peak commits @ $data->{$_} @ $_\n" if $data->{$_} > $peak;
-    $overPeak++ if $params->{commitHours}->{$_} > $overPeak;
+    #$overPeak++ if $params->{commitHours}->{$_} > $overPeak;
     $counter++;
   }
   
   my $percentage = $counter ? $overPeak / $counter * 100 : 0;
-  my $str = sprintf "Total times over $overPeak commits per hour: $overPeak (out of $counter possible hours) - %.2f%%\n", $percentage;
+  my $str = sprintf "Total times over $biggestEver commits per hour: $overPeak (out of $counter possible hours) - %.2f%%\n", $percentage;
   $log->info($str);
   $str .= "<br>\n";
   &updateHtml($params->{htmlData}, $str);
@@ -349,15 +357,10 @@ sub ShowCommitHours {
   &updateHtml($params->{htmlData}, $str);
   &updateHtml($params->{htmlBrief}, $str);
   &updateHtml($params->{customerReport}, $str);
-  if ($biggestId =~ /(\d{4})(\d{2})(\d{2})\@(\d{2})/) {
-    my $year  = $1;
-    my $month = $2;
-    my $day   = $3;
-    my $hour  = $4;
-    $str = "The busiest hour for commits was $month/$day/$year at $hour:00 [$biggestEver commits]";
-    $log->info($str);
-    $str .= "<br>\n";
-  }
+  my (undef, $year, $month, $day, $hh) = split /([0-9]{4})([0-9]{2})([0-9]{2})\@([0-9]{2})/, $biggestId;
+  $str = "The busiest hour for commits was $month/$day/$year at $hh:00 [$biggestEver commits]";
+  $log->info($str);
+  $str .= "<br>\n";
 
   &updateHtml($params->{htmlData}, $str);
   &updateHtml($params->{htmlBrief}, $str);
@@ -535,6 +538,10 @@ sub GetCollectorVersion
   my $log              = ${$params{log}};
   my $collectorVersion = "curl --silent --GET $restCall";
   my $version          = `$collectorVersion`;
+  if ($version =~ /^\<HTML\>/i) {
+    return "N/A";
+  }
+  
   my $parsedVersion    = parse_json $version if $version;
   if (defined $parsedVersion->[0]->{_collectorVersion})
   {

@@ -16,7 +16,10 @@ BEGIN {
   foreach (@packages){
     unless (eval "use $_; 1") {
       print "$_ not installed... Installing: $_";
-      my $ret = `cpan install $_`;
+      # CPAN needs to be configured to accept silent installation options.
+      # More info here: http://stackoverflow.com/questions/1039107/how-can-i-check-if-a-perl-module-is-installed-on-my-system-from-the-command-line      
+      # You need to give sudo permissions to run cpan to the user running this script.
+      my $ret = `sudo cpan $_`; 
       if ($?) {
         print "Error installing $_: $!\n";
         exit 7;
@@ -58,8 +61,9 @@ use strict;
 # ES                  | 1.4.4 | 25/03/2015 | Copying report to shared location  #
 # ES                  | 1.5.0 | 16/04/2015 | Rebranding to Verigreen            #
 # ES                  | 2.0.0 | 10/05/2015 | Releasing to Open-Source           #
+# ES                  | 2.0.1 | 31/05/2015 | Fixing cpan installation           #
 #*******************************************************************************#
-my $Version = '2.0.0';
+my $Version = '2.0.1';
 
 my $debug    = 1;
 my $customer = undef;
