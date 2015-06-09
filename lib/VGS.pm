@@ -39,27 +39,7 @@ use warnings;
 # Written by Eitan Schichmanter, 03/2014.                                       #
 # Who                 | Which | When       | What                               #
 # ES                  | 1.0.0 | 30/03/2014 | Initial Version                    #
-# ES                  | 1.1.0 | 10/04/2014 | Adding more capabilities           #
-# ES                  | 1.1.1 | 11/04/2014 | Some bug fixes                     #
-# ES                  | 1.1.2 | 02/06/2014 | Fixed bug of non-existing Build    #
-# ES                  | 1.1.3 | 02/06/2014 | Fixed aggregation data defects     #
-# ES                  | 1.1.4 | 15/06/2014 | Default to totalNum of commits     #
-# ES                  | 1.1.5 | 20/08/2014 | Adding prerequisites check         #
-# ES                  | 1.1.6 | 02/09/2014 | Remove division-by-zero exception  #
-# ES                  | 1.1.7 | 02/09/2014 | Remove division-by-zero exception  #
-# ES                  | 1.2.0 | 02/09/2014 | Adding GetFile with JSON           #
-# ES                  | 1.2.1 | 28/10/2014 | Adding Last commit time. Auth for  #
-#                                            Jenkins >1.565.2 (applicative)     #
-# ES                  | 1.3.0 | 30/11/2014 | Adding HTML output capabilities    #
-# ES                  | 1.3.1 | 10/12/2014 | Adding GetCollectorVersion         #
-# ES                  | 1.3.2 | 11/12/2014 | Adding commit times                #
-# ES                  | 1.3.3 | 16/12/2014 | Adding counterstart everywhere     #
-# ES                  | 1.3.4 | 17/12/2014 | Fixing REST compatibility with     #
-#                                            collector >=1.2.1 (committer)      #
-# ES                  | 1.3.5 | 01/01/2015 | Adding individual customer reports #
-# ES                  | 1.4.0 | 16/04/2015 | Rebranding to Verigreen            #
 # ES                  | 2.0.0 | 10/05/2015 | Releasing to Open-Source           #
-# ES                  | 2.0.1 | 21/05/2015 | Fixing bug with over-peak hours    #
 # ES                  | 2.0.2 | 09/06/2015 | Fixing bug parsing XML             #
 # This module requires cURL installed and on path to work correctly             #
 #*******************************************************************************#

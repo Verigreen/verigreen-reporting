@@ -42,12 +42,6 @@ use strict;
 # FetchWebUiData.pl - Fetch JSON data from Verigreen UI and store diffs.       #
 # Written by Eitan Schichmanter, 03/2014.                                      #
 # ES                  | 1.1.0 | 10/04/2014 | Adding Jenkins crawling           #
-# ES                  | 1.2.0 | 27/05/2014 | Multiple Collectors support       #
-# ES                  | 1.2.1 | 20/08/2014 | Adding prerequisites check        #
-# ES                  | 1.2.2 | 02/09/2014 | Saving new configuration          #
-# ES                  | 1.3.0 | 07/10/2014 | Dumping storable, moving to JSON  #
-# ES                  | 1.3.1 | 27/10/2014 | Fixing curl access issues         #
-# ES                  | 1.4.0 | 16/04/2015 | Rebranding to Verigreen           #
 # ES                  | 2.0.0 | 10/05/2015 | Releasing to Open-Source          #
 # ES                  | 2.0.1 | 31/05/2015 | Fixing cpan installation          #
 #******************************************************************************#

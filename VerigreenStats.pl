@@ -45,21 +45,6 @@ use strict;
 # Written by Eitan Schichmanter, 03/2014.                                       #
 # Who                 | Which | When       | What                               #
 # ES                  | 1.0.0 | 26/03/2014 | Initial Version                    #
-# ES                  | 1.0.1 | 10/04/2014 | Removing the eval                  #
-# ES                  | 1.2.0 | 29/05/2014 | Multiple Collectors support        #
-# ES                  | 1.2.1 | 15/07/2014 | Ignoring sub-folders in path       #
-# ES                  | 1.2.2 | 17/08/2014 | And now really fixing sub-folders  #
-# ES                  | 1.2.3 | 20/08/2014 | Adding prerequisites check         #
-# ES                  | 1.3.0 | 21/08/2014 | Renamed to EverGreenStats          #
-# ES                  | 1.3.1 | 06/10/2014 | Adding Total of Totals             #
-# ES                  | 1.3.2 | 28/10/2014 | Windows debug options. Auth for    #
-#                                            Jenkins >1.565.2 (applicative)     #
-# ES                  | 1.4.0 | 30/11/2014 | Adding HTML capabilities           #
-# ES                  | 1.4.1 | 10/12/2014 | Adding CollectorVersion            #
-# ES                  | 1.4.2 | 01/01/2015 | Adding individual customer reports #
-# ES                  | 1.4.3 | 07/01/2015 | On-demand customer report          #
-# ES                  | 1.4.4 | 25/03/2015 | Copying report to shared location  #
-# ES                  | 1.5.0 | 16/04/2015 | Rebranding to Verigreen            #
 # ES                  | 2.0.0 | 10/05/2015 | Releasing to Open-Source           #
 # ES                  | 2.0.1 | 31/05/2015 | Fixing cpan installation           #
 #*******************************************************************************#
