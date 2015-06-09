@@ -60,9 +60,10 @@ use warnings;
 # ES                  | 1.4.0 | 16/04/2015 | Rebranding to Verigreen            #
 # ES                  | 2.0.0 | 10/05/2015 | Releasing to Open-Source           #
 # ES                  | 2.0.1 | 21/05/2015 | Fixing bug with over-peak hours    #
+# ES                  | 2.0.2 | 09/06/2015 | Fixing bug parsing XML             #
 # This module requires cURL installed and on path to work correctly             #
 #*******************************************************************************#
-my $Version      = '2.0.1';
+my $Version      = '2.0.2';
 
 require Exporter;
 our @ISA    = qw(Exporter);
@@ -253,7 +254,7 @@ sub getUrlData {
   $log->debug('Done');
   $log->debug("Dumping jData:\n\n");
   $log->debug("$jData");
-  if ($jData =~ /Error Report/i) {
+  if ($jData =~ /Error/i) {
     return undef;
   }
   
