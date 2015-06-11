@@ -34,16 +34,16 @@ use LWP::Simple;
 use XML::Simple;
 use strict;
 use warnings;
-#*******************************************************************************
+#*******************************************************************************#
 # VGS - Verigreen Stats - Common operations for Verigreen.                      #
 # Written by Eitan Schichmanter, 03/2014.                                       #
 # Who                 | Which | When       | What                               #
 # ES                  | 1.0.0 | 30/03/2014 | Initial Version                    #
 # ES                  | 2.0.0 | 10/05/2015 | Releasing to Open-Source           #
-# ES                  | 2.0.2 | 09/06/2015 | Fixing bug parsing XML             #
+# ES                  | 2.0.3 | 11/06/2015 | Fixing bug parsing XML             #
 # This module requires cURL installed and on path to work correctly             #
 #*******************************************************************************#
-my $Version      = '2.0.2';
+my $Version      = '2.0.3';
 
 require Exporter;
 our @ISA    = qw(Exporter);
@@ -234,7 +234,7 @@ sub getUrlData {
   $log->debug('Done');
   $log->debug("Dumping jData:\n\n");
   $log->debug("$jData");
-  if ($jData =~ /Error/i) {
+  if ($jData =~ /(Error|Access Denied)/i) {
     return undef;
   }
   
