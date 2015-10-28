@@ -40,10 +40,11 @@ use warnings;
 # Who                 | Which | When       | What                               #
 # ES                  | 1.0.0 | 30/03/2014 | Initial Version                    #
 # ES                  | 2.0.0 | 10/05/2015 | Releasing to Open-Source           #
-# ES                  | 2.0.3 | 11/06/2015 | Fixing bug parsing XML             #
+# ...                                                                           #
+# ES                  | 2.0.4 | 28/10/2015 | Add support for duplicate names    #
 # This module requires cURL installed and on path to work correctly             #
 #*******************************************************************************#
-my $Version      = '2.0.3';
+my $Version      = '2.0.4';
 
 require Exporter;
 our @ISA    = qw(Exporter);
@@ -106,9 +107,9 @@ sub gatherData {
       $params->{commitHours}->{$identifier}++;
     }  
     if (defined $data->[$i]->{runTime}) {
-      my $startTime = $data->[$i]->{runTime} / $ms; # it's in ms so we're dividing by $ms to get to seconds
-      my $endTime   = $data->[$i]->{endTime} / $ms if defined $data->[$i]->{endTime}; # it's in ms so we're dividing by $ms to get to seconds
-      $data->[$i]->{buildTimeInMinutes} = int (($endTime - $startTime) / 60) if defined $endTime; # Dividing into hours and rounding to an integer
+      my $startTime = $data->[$i]->{runTime} / $ms if (defined $data->[$i]->{runTime} && "" ne $data->[$i]->{runTime}); # it's in ms so we're dividing by $ms to get to seconds
+      my $endTime   = $data->[$i]->{endTime} / $ms if (defined $data->[$i]->{endTime} && "" ne $data->[$i]->{endTime}); # it's in ms so we're dividing by $ms to get to seconds
+      $data->[$i]->{buildTimeInMinutes} = int (($endTime - $startTime) / 60) if defined $startTime && $endTime; # Dividing into hours and rounding to an integer
     }
     
     &GetJenkinsData($i, $params, \$changed);
@@ -120,11 +121,36 @@ sub gatherData {
     }
   }
   
+  &fixDuplicateCommitters($params);
   # Only if the data has changed we'll overwrite the files with the new data
   my $file = $params->{config}->{InputFolder} . '/' . $params->{VUI};
   &SaveFiles($file, \$data)  if $changed;  
 }
 
+#*****************************************************************************#
+sub fixDuplicateCommitters {
+  my $params     = shift;
+  my $data       = ${$params->{data}};
+  my $log        = ${$params->{log}};
+  my @toDelete   = ();
+  foreach my $committer (keys %{$params->{committers}}) {
+    my $origCommitter = $committer;
+    $committer        =~ s/([\w\-]*).?([\w\-]*)\@.*/\u$1 \u$2/gi;
+    foreach my $candid (keys %{$params->{committers}}) {
+      next if $origCommitter eq $candid; # skip same element checks
+      my $origCandid = $candid;
+      $candid    =~ s/([\w\-]*).?([\w\-]*)\@.*/\u$1 \u$2/gi;
+      if ($committer =~ $candid) { # found the same committer name
+       $log->info("Found Duplicate $origCommitter/$origCandid. Consolidating...");
+       if (!grep @toDelete, $origCommitter) { # add only if the original committer is not already there
+        push @toDelete, $origCandid; 
+        $params->{committers}->{$origCommitter} += $params->{committers}->{$origCandid}; # add all the other committs
+        delete $params->{committers}->{$origCandid};        
+       }
+      }      
+    }
+  }
+}
 #*****************************************************************************#
 sub GetFile {
   my ($log, $file, $rData) = @_;
@@ -377,7 +403,7 @@ sub ShowCommitersData {
     my $builds    = $params->{committers}->{$committer};
     $committer    =~ s/([\w\-]*).?([\w\-]*)\@.*/\u$1 \u$2/gi;
     $log->info("\t" . '*'x80);
-    my $str = "$committer [$builds]";
+    my $str = "$committer ($_) [$builds]";
     $log->info("\t$str");
     $str = "<p id=\"Committer\">$str</p>\n<table>\n";
     &updateHtml($params->{htmlData}, $str);
@@ -398,8 +424,12 @@ sub ShowCommitersData {
     my $countStart = defined $data->[0]->{CollectorVersion} ? 1 : 0; # if the version exists, skip this element
     for (my $i = $countStart; $i < @$data; $i++) {
       my $committer = defined $data->[$i]->{branchDescriptor}->{committer} ? $data->[$i]->{branchDescriptor}->{committer} : $data->[$i]->{branchDescriptor}->{commiter};
-      next if !$committer;      
-      if ($_ eq $committer) {
+      next if !$committer;
+      $committer        =~ s/([\w\-]*).?([\w\-]*)\@.*/\u$1 \u$2/gi;
+      my $origCommitter = $_;
+      $origCommitter    =~ s/([\w\-]*).?([\w\-]*)\@.*/\u$1 \u$2/gi;
+
+      if ($origCommitter eq $committer) { # this will ensure we consolidate all the duplicates
         my $commitId      = $data->[$i]->{branchDescriptor}->{commitId};
         my $status        = $data->[$i]->{status};
         my $creationTime  = 0 || $data->[$i]->{creationTime};
