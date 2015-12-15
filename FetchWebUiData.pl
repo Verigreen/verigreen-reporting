@@ -43,9 +43,9 @@ use strict;
 # Written by Eitan Schichmanter, 03/2014.                                      #
 # ES                  | 1.1.0 | 10/04/2014 | Adding Jenkins crawling           #
 # ES                  | 2.0.0 | 10/05/2015 | Releasing to Open-Source          #
-# ES                  | 2.0.1 | 31/05/2015 | Fixing cpan installation          #
+# ES                  | 2.0.2 | 15/12/2015 | Fixing network access issues      #
 #******************************************************************************#
-my $Version      = '2.0.1';
+my $Version      = '2.0.2';
 
 my $log        = &InitLogger();
 my $configData = &getConfig();
@@ -92,7 +92,7 @@ sub processServers {
     my $cmd = "curl --silent --GET $server->{Address}/$param";
     $log->debug("Qyerying: $cmd");
     my $data      = `$cmd`;
-    $log->warn("Error accessing the $display collector. Please check connectivity") and next if $data =~ /(The Web Server may be down|Connection refused)/i;
+    $log->warn("Error accessing the $display collector. Please check connectivity") and next if $data =~ /^\</i;
     my $perl      = parse_json ($data) if defined $data;
     $log->info("$display [$server->{Address}] Has no data. Continuing...") and next if !defined $perl or scalar @$perl == 0;
     $log->warn("Can't parse $display [$server->{Address}] for data...") and next if !$perl;
