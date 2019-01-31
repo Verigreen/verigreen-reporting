@@ -35,7 +35,7 @@ The script will try to install missing ones, but requires cpan installation perm
 - VerigreenStats.js - JavaScript method to allow exapnd/collapse of blocks
 - VerigreenStats.pl - Create report from the gathered data in FetchWebUiData.pl
 - VerigreenStats.sample.xml - Configuration file to define parameters for reporting [Needs to be edited and renamed to VerigreenStats.xml]
-- lib/Ebc.pm - Extended Base Classes. Gives some service utilities (like logging, humand/PC file size format etc.)
+- lib/Ebc.pm - Extended Base Classes. Gives some service utilities (like logging, human/PC file size format etc.)
 - lib/VGS - VeriGreen Statistics helper classes. Does the reporting computation
 
 ## Usage
